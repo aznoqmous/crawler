@@ -86,6 +86,20 @@ document.addEventListener('DOMContentLoaded', ()=>{
     c.startCrawl(element.input.value)
     .then(res => {
       element.status.innerHTML = `Crawl ended in ${ (Date.now() - start ) / 1000}s`
+      sortLinks(element.internal)
+      sortLinks(element.external)
+    })
+  }
+
+  function sortLinks(container){
+    let links = [...container.children]
+    links.map(l => {
+      let count = parseInt(l.children[0].innerHTML)
+      return {l, count}
+    })
+    .sort((a, b)=> (a.count < b.count) ? 1 : -1 )
+    .map(l => {
+      container.appendChild(l.l)
     })
   }
 
