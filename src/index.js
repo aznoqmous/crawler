@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   let element = new Rigged({ template: `
     div
-      input @input [autofocus="true"] [value="${searchUrl}"]
+      input @input [autofocus="true"]
       div @status
       div @pageCount
       div @details
@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
           strong (external)
           div @external
     `, container: document.body })
+
+  if(searchUrl) element.input.value = searchUrl
 
   element.results.setStyle({
     display: "flex"
