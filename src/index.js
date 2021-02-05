@@ -12,10 +12,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
       div @pageCount
       div @details
       div @results
-        div
+        div .internal.links
           strong (internal)
           div @internal
-        div
+        div .external.links
           strong (external)
           div @external
     `, container: document.body })
