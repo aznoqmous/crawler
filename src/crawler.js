@@ -70,7 +70,12 @@ export default class Crawler {
   getLinks(content){
     let links = [...content.matchAll(/\<a[^\>]*?href\=[\"|\']([^\"\']*?)[\"|\']/g)]
     links = links.map(l => l[1])
-    links = links.filter(l => !l.match(/mailto:/) && !l.match(/tel:/))
+    links = links.filter(l => l.length)
+
+    let ban = ['mailto:', 'javascript:', 'tel:', '\.jpg', '.png', '.svg', '@']
+    ban.map(b => {
+        links = links.filter(l => !l.match(b) ? true : false)
+    })
     return links
   }
 
@@ -99,7 +104,6 @@ class Link {
     url = decodeURIComponent(JSON.parse('"' + url + '"'))
     if(!url.match('http')) url = (url.length && url != '/') ? `http://${host}/${url}` : `http://${host}`
     this.url = url
-    console.log(this.url)
     this.host = (new URL(this.url)).host
     this.isExternal = (this.host != host)
     this.status = null
