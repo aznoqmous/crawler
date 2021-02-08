@@ -5,12 +5,47 @@ html {
   font-family: Arial, sans-serif;
 }
 
-.links > div > .link {
-  cursor: pointer;
-  span {
-    color: $color_gray-dark;
-  }
-  &:hover span {
-    color: $color_black;
-  }
+.details {
+    > div {
+        padding: 0.6rem 1.2rem;
+        border-radius: 5px;
+        margin: 1rem 0;
+        border: 1px solid $color_lightgrey;
+        font-size: 0.8rem;
+        .head {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        ul, ol {
+            height: 200px;
+            overflow-y: scroll;
+            border: 1px solid $color_lightgrey;
+            border-radius: 5px;
+            padding-left: 2.5em;
+        }
+    }
+}
+
+.results {
+    display: flex;
+    .links {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        > .count {
+            strong {
+                margin-right: 0.2em;
+            }
+        }
+        > div > .link {
+          cursor: pointer;
+          span {
+            color: $color_gray-dark;
+          }
+          &:hover span {
+            color: $color_black;
+          }
+        }
+    }
 }

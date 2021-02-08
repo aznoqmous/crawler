@@ -68,7 +68,7 @@ export default class Crawler {
   }
 
   getLinks(content){
-    let links = [...content.matchAll(/\<a[^\>]*?href\=\"([^"]*?)\"/g)]
+    let links = [...content.matchAll(/\<a[^\>]*?href\=[\"|\']([^\"\']*?)[\"|\']/g)]
     links = links.map(l => l[1])
     links = links.filter(l => !l.match(/mailto:/) && !l.match(/tel:/))
     return links
@@ -80,6 +80,7 @@ export default class Crawler {
 
   addLink(url, fromPage){
       let l = new Link(url, this.host)
+
       let isNew = true
       if(!this.links[l.url]) this.links[l.url] = l
       else {
@@ -95,8 +96,10 @@ export default class Crawler {
 class Link {
   constructor(url, host){
     this.pagesIn = []
+    url = decodeURIComponent(JSON.parse('"' + url + '"'))
     if(!url.match('http')) url = (url.length && url != '/') ? `http://${host}/${url}` : `http://${host}`
     this.url = url
+    console.log(this.url)
     this.host = (new URL(this.url)).host
     this.isExternal = (this.host != host)
     this.status = null

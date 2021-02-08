@@ -13,33 +13,21 @@ document.addEventListener('DOMContentLoaded', ()=>{
       div @status
       div @pageCount
       div @pageStatuses
-      div @details
-      div @results
+      div @details .details
+      div @results .results
         div .internal.links
-          div
+          div .count
             strong (internal)
             strong @internalCount
           div @internal
         div .external.links
-          div
+          div .count
             strong (external)
             strong @externalCount
           div @external
     `, container: document.body })
 
   if(searchUrl) element.input.value = searchUrl
-
-  element.results.setStyle({
-    display: "flex"
-  })
-  element.internal.setStyle({
-    display: "flex",
-    flexDirection: "column"
-  })
-  element.external.setStyle({
-    display: "flex",
-    flexDirection: "column"
-  })
 
   if(element.input.value) crawl()
 
@@ -61,7 +49,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
           if(l.isExternal) container = element.external
           let el = new Rigged({template: `
             div .link
-              i @status .badge
+              i @status .status.badge (${l.isExternal ? '' : 'fetching...'})
               i @count .count.badge (1)
               span @link (${l.url})
             ` , container})
@@ -69,11 +57,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
           el.link.addEventListener('click', ()=>{
             element.details.clear()
             let lEl = new Rigged({template: `
-              div (${l.url})
-              ul (${l.pagesIn.map(url => `<a href="${url}" target="_blank">${url}</a>`).join('<br> ')})
+              div
+                div .head
+                    i @status .badge (${l.status ? l.status : ''})
+                    strong (${l.url})
+                div (Link can be found on ${l.pagesIn.length} pages : )
+                ol (${l.pagesIn.map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`).join('')})
               `, container: element.details})
-              lEl.element.setStyle({display: 'flex', flexDirection: 'column'})
+              if(l.status){
+                  if(l.status == 200) lEl.status.classList.add('success')
+                  else lEl.status.classList.add('error')
+              }
             })
+
         }
         else {
           l = l.link
@@ -103,6 +99,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
       element.status.innerHTML = `Crawl ended in ${ (Date.now() - start ) / 1000}s`
       sortLinks(element.internal)
       sortLinks(element.external)
+      displayPageStatuses(element.internal)
     })
   }
 
@@ -116,6 +113,25 @@ document.addEventListener('DOMContentLoaded', ()=>{
     .map(l => {
       container.appendChild(l.l)
     })
+  }
+
+  function displayPageStatuses(container){
+      let statusesEl = [...container.querySelectorAll('.status')]
+      let statuses = {}
+      statusesEl.map(s => {
+          let status = parseInt(s.innerHTML)
+          if(!statuses[status]) statuses[status] = 1
+          else statuses[status] += 1
+      })
+
+      for(let status in statuses){
+          new Rigged({template: `
+              div
+                i .badge ${ (status == 200) ? '.success' : '.error'} (${status})
+                span (${statuses[status] ? statuses[status] + " pages" : "0 page"})
+              `, container: element.pageStatuses})
+      }
+
   }
 
 })
