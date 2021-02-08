@@ -43,6 +43,7 @@ html {
           cursor: pointer;
           span {
             color: $color_gray-dark;
+            font-size: 0.8rem;
           }
           &:hover span {
             color: $color_black;
