@@ -1,5 +1,7 @@
 import Crawler from './crawler'
 import Rigged from 'rigged'
+import "../scss/main.scss"
+
 document.addEventListener('DOMContentLoaded', ()=>{
 
   let currentUrl = new URL(window.location.href)
@@ -10,13 +12,18 @@ document.addEventListener('DOMContentLoaded', ()=>{
       input @input [autofocus="true"]
       div @status
       div @pageCount
+      div @pageStatuses
       div @details
       div @results
         div .internal.links
-          strong (internal)
+          div
+            strong (internal)
+            strong @internalCount
           div @internal
         div .external.links
-          strong (external)
+          div
+            strong (external)
+            strong @externalCount
           div @external
     `, container: document.body })
 
@@ -53,9 +60,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
           let container = element.internal
           if(l.isExternal) container = element.external
           let el = new Rigged({template: `
-            div
-              span @count (1)
-              span ( - )
+            div .link
+              i @status .badge
+              i @count .count.badge (1)
               span @link (${l.url})
             ` , container})
           els[l.url] = el
@@ -68,10 +75,18 @@ document.addEventListener('DOMContentLoaded', ()=>{
               lEl.element.setStyle({display: 'flex', flexDirection: 'column'})
             })
         }
-
         else {
           l = l.link
           els[l.url].count.innerHTML = l.pagesIn.length
+        }
+        element.internalCount.innerHTML = element.internal.children.length
+        element.externalCount.innerHTML = element.external.children.length
+      },
+      onCrawl: (l)=>{
+        if(l) {
+           els[l.url].status.innerHTML = l.status
+           if(l.status == 200) els[l.url].status.classList.add('success')
+           else els[l.url].status.classList.add('error')
         }
       }
     })
@@ -94,7 +109,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   function sortLinks(container){
     let links = [...container.children]
     links.map(l => {
-      let count = parseInt(l.children[0].innerHTML)
+      let count = parseInt(l.querySelector('.count').innerHTML)
       return {l, count}
     })
     .sort((a, b)=> (a.count < b.count) ? 1 : -1 )

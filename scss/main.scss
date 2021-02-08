@@ -1,0 +1,39 @@
+@import "variables";
+
+html {
+  font-family: Arial, sans-serif;
+}
+
+.links > div > .link {
+  cursor: pointer;
+  span {
+    color: $color_gray-dark;
+  }
+  &:hover span {
+    color: $color_black;
+  }
+}
+
+.badge:not(:empty) {
+  font-size: 0.6em;
+  padding: 0.2em 0.4em;
+  border-radius: 0.2em;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+
+  margin-right: 0.2em;
+  font-weight: bold;
+  background: $color_white;
+  color: $color_gray-dark;
+  &.info {
+    background: $color_primary;
+    color: $color_white;
+  }
+  &.success {
+    background: $color_success;
+    color: $color_white
+  }
+  &.error {
+    background: $color_danger;
+    color: $color_white
+  }
+}

@@ -22,6 +22,9 @@ export default class Crawler {
   crawl(url){
     return this.get(url)
     .then(res => {
+      let link = this.getLink(url)
+      if(link) link.status = res.http_code
+      if(this.opts.onCrawl) this.opts.onCrawl(link)
       return Promise.allSettled(
         this.getLinks(res.content)
         .map(l => {
@@ -35,6 +38,7 @@ export default class Crawler {
         .filter(l => l)
         .map(l => this.crawl(l.url) )
       )
+
     })
   }
 
@@ -66,7 +70,12 @@ export default class Crawler {
   getLinks(content){
     let links = [...content.matchAll(/\<a[^\>]*?href\=\"([^"]*?)\"/g)]
     links = links.map(l => l[1])
+    links = links.filter(l => !l.match(/mailto:/) && !l.match(/tel:/))
     return links
+  }
+
+  getLink(url){
+    return this.links[url]
   }
 
   addLink(url, fromPage){
@@ -90,8 +99,11 @@ class Link {
     this.url = url
     this.host = (new URL(this.url)).host
     this.isExternal = (this.host != host)
+    this.status = null
   }
+
   addPageRef(page){
     if(!this.pagesIn.includes(page)) this.pagesIn.push(page)
   }
+
 }
