@@ -25,6 +25,7 @@ export default class Crawler {
       let link = this.getLink(url)
       if(link) link.status = res.http_code
       if(this.opts.onCrawl) this.opts.onCrawl(link)
+      if(this.opts.onCrawlResponse) this.opts.onCrawlResponse(res)
       return Promise.allSettled(
         this.getLinks(res.content)
         .map(l => {
