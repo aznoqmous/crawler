@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     element.host = c.host
     element.internal.clear()
     element.external.clear()
+    element.pageStatuses.clear()
 
     element.status.innerHTML = 'Crawl in progress...'
     element.pageCount.innerHTML = '0 internal page crawled'
@@ -118,6 +119,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   function displayPageStatuses(container){
       let statusesEl = [...container.querySelectorAll('.status')]
       let statuses = {}
+
       statusesEl.map(s => {
           let status = parseInt(s.innerHTML)
           if(!statuses[status]) statuses[status] = 1
@@ -125,11 +127,16 @@ document.addEventListener('DOMContentLoaded', ()=>{
       })
 
       for(let status in statuses){
+        fetch(`http://httpstat.us/${status}`)
+        .then(res => res.text())
+        .then(text => {
           new Rigged({template: `
-              div
-                i .badge ${ (status == 200) ? '.success' : '.error'} (${status})
-                span (${statuses[status] ? statuses[status] + " pages" : "0 page"})
-              `, container: element.pageStatuses})
+            div
+            i .badge ${ (status == 200) ? '.success' : '.error'} (${text})
+            span (${statuses[status] ? statuses[status] + " pages" : "0 page"})
+            `, container: element.pageStatuses})
+
+        })
       }
 
   }

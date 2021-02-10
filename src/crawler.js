@@ -43,10 +43,10 @@ export default class Crawler {
       )
 
     })
+    .catch(e => console.log(e))
   }
 
   get(url){
-
     if(!url) return console.error('You must provide at least an url argument to Crawler !')
     return new Promise((ok, nok) => {
       fetch(this.opts.getPageUrl, {
@@ -75,7 +75,7 @@ export default class Crawler {
     links = links.map(l => l[1])
     links = links.filter(l => l.length)
 
-    let ban = ['mailto:', 'javascript:', 'tel:', '\.jpg', '.png', '.svg']
+    let ban = ['mailto:', 'javascript:', 'tel:', '\.jpg', '.png', '.svg', '.pdf']
     ban.map(b => {
         links = links.filter(l => !l.match(b) ? true : false)
     })
