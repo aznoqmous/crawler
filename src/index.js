@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
               div
                 div .head
                     i @status .badge (${l.status ? l.status : ''})
-                    strong (${l.url})
+                    a [href="${l.url}"] [target="_blank"] (${l.url})
                 div (Link can be found on ${l.pagesIn.length} pages : )
                 ol (${l.pagesIn.map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`).join('')})
               `, container: element.details})

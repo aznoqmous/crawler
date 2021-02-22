@@ -75,7 +75,7 @@ export default class Crawler {
     links = links.map(l => l[1])
     links = links.filter(l => l.length)
 
-    let ban = ['mailto:', 'javascript:', 'tel:', '\.jpg', '.png', '.svg', '.pdf']
+    let ban = ['mailto:', 'javascript:', 'tel:', '\.jpg', '.png', '.svg', '.pdf', '_profiler']
     ban.map(b => {
         links = links.filter(l => !l.match(b) ? true : false)
     })
