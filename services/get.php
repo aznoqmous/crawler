@@ -1,11 +1,9 @@
 <?php
 
 $data = (object) array_merge($_GET, $_POST);
+echo json_encode(get_web_page($data->url, explode(',', $data->headers)));
 
-echo json_encode(get_web_page($data->url));
-
-
-function get_web_page( $url )
+function get_web_page($url, $headers=[])
     {
         $user_agent='Mozilla/5.0 (Windows NT 6.1; rv:8.0) Gecko/20100101 Firefox/8.0';
 
@@ -21,6 +19,7 @@ function get_web_page( $url )
             CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
             CURLOPT_TIMEOUT        => 120,      // timeout on response
             CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+            CURLOPT_HTTPHEADER     => $headers, // custom headers
             CURLOPT_SSL_VERIFYPEER => 0,
             CURLOPT_SSL_VERIFYHOST => 0
         );

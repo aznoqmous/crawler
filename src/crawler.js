@@ -6,7 +6,8 @@ export default class Crawler {
     this.opts = Object.assign({
       url: url,
       getPageUrl: '/services/get.php',
-      depth: null // infinite
+      depth: null, // infinite
+      headers: {}
     }, opts)
 
     this.links = {}
@@ -51,7 +52,10 @@ export default class Crawler {
     return new Promise((ok, nok) => {
       fetch(this.opts.getPageUrl, {
         method: 'POST',
-        body: this.getPostData({url: url})
+        body: this.getPostData({
+          url,
+          headers: this.opts.headers
+        })
       })
       .then(res => res.json())
       .then(data => {

@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   let element = new Rigged({ template: `
     div
-      input @input [autofocus="true"]
+      input @input [autofocus="true"][placeholder="URL"]
+      textarea @headers [placeholder="Headers"]
       div @status
       div @pageCount
       div @pageStatuses
@@ -30,7 +31,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
   if(searchUrl) element.input.value = searchUrl
 
   if(element.input.value) crawl()
-
+  element.headers.addEventListener('input', (e)=>{
+    element.headers.style.height = "5px";
+    element.headers.style.height = (element.headers.scrollHeight)+"px";
+  })
   element.input.addEventListener('keyup', (e)=>{
     if(e.key == 'Enter') {
       crawl()
@@ -41,6 +45,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     let els = {}
 
     let c = new Crawler(element.input.value, {
+      headers: element.headers.value.replace('\r').split('\n'),
       onLink: (l)=>{
         element.pageCount.innerHTML = `${c.internalCount} internal pages crawled`
         if(l.new){
