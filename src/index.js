@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
           div .count
             strong (internal)
             strong @internalCount
+          div .copy @copyInternal (copy as text)
           div @internal
         div .external.links
           div .count
@@ -40,11 +41,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
       crawl()
     }
   })
+  
+  let c;
+
+  element.copyInternal.addEventListener('click', ()=>{
+    if(!c) return;
+    let content = Object.values(c.links).filter(l => !l.isExternal).map(l => l.url).join("\r\n")
+    navigator.clipboard.writeText(content)
+  })
 
   function crawl(){
     let els = {}
 
-    let c = new Crawler(element.input.value, {
+    c = new Crawler(element.input.value, {
       headers: element.headers.value.replace('\r').split('\n'),
       onLink: (l)=>{
         element.pageCount.innerHTML = `${c.internalCount} internal pages crawled`
