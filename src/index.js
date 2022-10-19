@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   element.copyInternal.addEventListener('click', ()=>{
     if(!c) return;
-    let content = Object.values(c.links).filter(l => !l.isExternal).map(l => l.url).join("\r\n")
+    let content = Object.values(c.links).filter(l => !l.isExternal).map(l => l.url).sort((a,b) => a > b ? 1 : -1).join("\r\n")
     navigator.clipboard.writeText(content)
   })
 
