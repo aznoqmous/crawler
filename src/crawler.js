@@ -19,6 +19,7 @@ export default class Crawler {
     url = url ? url : this.opts.url
     if(!url.match('http')) url = `http://${url}`
     this.host = (new URL(url)).host
+    this.origin = (new URL(url)).origin
     return this.crawl(url)
   }
 
@@ -91,7 +92,7 @@ export default class Crawler {
   }
 
   addLink(url, fromPage){
-      let l = new Link(url, this.host)
+      let l = new Link(url, this.origin)
 
       let isNew = true
       if(!this.links[l.url]) this.links[l.url] = l

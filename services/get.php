@@ -1,7 +1,11 @@
 <?php
 
 $data = (object) array_merge($_GET, $_POST);
-echo json_encode(get_web_page($data->url, explode(',', $data->headers)));
+
+echo json_encode(
+    get_web_page($data->url, explode(',', $data->headers)),
+    JSON_INVALID_UTF8_SUBSTITUTE
+);
 
 function get_web_page($url, $headers=[])
     {
